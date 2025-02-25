@@ -63,6 +63,73 @@ overall_participation = (class_participation + homework_participation) / 2
 ## Create sections and render dashboard
 st.write(' ')
 st.write(' ')
+
+st.header('Engagement')
+st.subheader('Time Spent (Hrs)')
+st.write('_Includes time spent within the self-paced course including watched video content and completed homework and digital textbook assignments. It also includes time spent using the JW question bank._')
+
+st.write (' ')
+st.write (' ')
+
+line_time_spent = alt.Chart(df_engagement_attendance_student_filtered).mark_line(point=True).encode(
+    x=alt.X(
+        'week:O',
+        axis=alt.Axis(
+            labelAngle=0,
+            title='Week'
+        )
+    ),
+    y=alt.Y(
+        'time_spent_hrs',
+        axis=alt.Axis(
+            title='Time Spent (Hrs)'
+        )
+    ),
+    tooltip=[
+            alt.Tooltip('week:O',title='Week'),
+            alt.Tooltip('time_spent_hrs',title='Time Spent (Hrs)')
+    ],
+)
+
+st.altair_chart(line_time_spent, use_container_width=True)
+
+st.write(' ')
+st.write(' ')
+
+st.header('Accuracy')
+
+st.write(' ')
+st.write(' ')
+
+line_accuracy = alt.Chart(df_engagement_attendance_student_filtered).mark_line(point=True).transform_fold(
+    fold=['sciences_accuracy', 'cars_accuracy','class_accuracy'], 
+    as_=['variable', 'value']
+).encode(
+    x=alt.X(
+        'week:O',
+        axis=alt.Axis(
+            labelAngle=0,
+            title='Week'
+        )
+    ),
+    y=alt.Y(
+        'value:Q',
+        axis=alt.Axis(
+            title='Accuracy Score',
+            format='%'
+        )
+    ),
+    tooltip=[
+        alt.Tooltip('week:O',title='Week'),
+        alt.Tooltip('value:Q',title='Accuracy Rate',format='0.1%')
+    ],
+    color=alt.Color('variable:N',legend=alt.Legend(title='Subject',orient='bottom'))
+)
+
+st.altair_chart(line_accuracy,use_container_width=True)
+
+st.write(' ')
+st.write(' ')
 st.header('Participation')
 # st.write('The student has an aggregate weekly average rate of {class_participation:.1%} for class participation and {homework_participation:.1%} for homework participation. To date, overall participation is {overall_participation:.1%}.'.format(class_participation=class_participation,homework_participation=homework_participation,overall_participation=overall_participation))
 st.write(' ')
